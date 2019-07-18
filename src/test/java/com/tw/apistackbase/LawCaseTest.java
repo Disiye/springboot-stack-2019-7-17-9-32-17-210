@@ -35,6 +35,14 @@ public class LawCaseTest {
     }
 
     @Test
+    public void should_return_exception_when_is_null() {
+        LawCase lawCase = new LawCase();
+        Assertions.assertThrows(RuntimeException.class,()->{
+            lawCaseRepository.saveAndFlush(lawCase);
+        });
+    }
+
+    @Test
     public void return_law_case_when_get_law_case_by_id(){
         lawCaseRepository.saveAndFlush(new LawCase("LawCase1",new Date().getTime()));
         lawCaseRepository.saveAndFlush(new LawCase("LawCase2",new Date().getTime()));
