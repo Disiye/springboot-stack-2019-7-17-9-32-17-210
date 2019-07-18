@@ -28,10 +28,6 @@ public class Procuratorate {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ID")
-    private List<LawCase> lawCases = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ID")
     private List<Judge> judges = new ArrayList<>();
 
     public Long getId() {
@@ -48,14 +44,6 @@ public class Procuratorate {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<LawCase> getLawCases() {
-        return lawCases;
-    }
-
-    public void setLawCases(List<LawCase> lawCases) {
-        this.lawCases = lawCases;
     }
 
     public List<Judge> getJudges() {

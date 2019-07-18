@@ -4,6 +4,7 @@ import com.tw.apistackbase.entity.CaseInfo;
 import com.tw.apistackbase.entity.LawCase;
 import com.tw.apistackbase.repository.CaseInfoRepository;
 import com.tw.apistackbase.repository.LawCaseRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,26 +32,32 @@ public class CaseInfoTest {
     @Autowired
     private CaseInfoRepository caseInfoRepository;
 
+    @Before
+    public void deleteAll(){
+        lawCaseRepository.deleteAll();
+        caseInfoRepository.deleteAll();
+    }
+
     @Test
     public void return_case_info_when_get_case_info_by_id(){
-        caseInfoRepository.saveAndFlush(new CaseInfo("objectiveDesc1","subjectiveDesc1"));
-        caseInfoRepository.saveAndFlush(new CaseInfo("objectiveDesc2","subjectiveDesc2"));
-        Assertions.assertEquals("objectiveDesc1", caseInfoRepository.findById(1L).get().getObjectiveDesc());
+        Long id =  caseInfoRepository.save(new CaseInfo("objectiveDesc1","subjectiveDesc1")).getId();
+        caseInfoRepository.save(new CaseInfo("objectiveDesc2","subjectiveDesc2"));
+        Assertions.assertEquals("objectiveDesc1", caseInfoRepository.findById(id).get().getObjectiveDesc());
     }
 
     @Test
     public void return_same_case_info_when_get_case_info_by_id(){
-        caseInfoRepository.saveAndFlush(new CaseInfo("objectiveDesc1","subjectiveDesc1"));
-        caseInfoRepository.saveAndFlush(new CaseInfo("objectiveDesc2","subjectiveDesc2"));
-        Assertions.assertEquals("objectiveDesc1", caseInfoRepository.findById(1L).get().getObjectiveDesc());
-        Assertions.assertEquals("subjectiveDesc1", caseInfoRepository.findById(1L).get().getSubjectiveDesc());
+        Long id = caseInfoRepository.save(new CaseInfo("objectiveDesc1","subjectiveDesc1")).getId();
+        caseInfoRepository.save(new CaseInfo("objectiveDesc2","subjectiveDesc2"));
+        Assertions.assertEquals("objectiveDesc1", caseInfoRepository.findById(id).get().getObjectiveDesc());
+        Assertions.assertEquals("subjectiveDesc1", caseInfoRepository.findById(id).get().getSubjectiveDesc());
     }
 
     @Test
     public void return_all_case_info_when_get_case_info() {
-        lawCaseRepository.saveAndFlush(new LawCase("LawCase1",new Date().getTime(), new CaseInfo("objectiveDesc1","subjectiveDesc1")));
-        lawCaseRepository.saveAndFlush(new LawCase("LawCase2",new Date().getTime(), new CaseInfo("objectiveDesc1","subjectiveDesc1")));
-        LawCase lawCase = lawCaseRepository.findById(1L).get();
+        Long id = lawCaseRepository.save(new LawCase("LawCase1",new Date().getTime(), new CaseInfo("objectiveDesc1","subjectiveDesc1"))).getId();
+        lawCaseRepository.save(new LawCase("LawCase2",new Date().getTime(), new CaseInfo("objectiveDesc1","subjectiveDesc1")));
+        LawCase lawCase = lawCaseRepository.findById(id).get();
         Assertions.assertEquals("LawCase1", lawCase.getLawCaseName());
         Assertions.assertEquals("objectiveDesc1", lawCase.getCaseInfo().getObjectiveDesc());
         Assertions.assertEquals("subjectiveDesc1", lawCase.getCaseInfo().getSubjectiveDesc());
@@ -58,9 +65,9 @@ public class CaseInfoTest {
 
     @Test
     public void return_law_case_and_case_info_when_add_case_info_in_law_case() {
-        LawCase lawCase = lawCaseRepository.saveAndFlush(new LawCase("LawCase1",new Date().getTime()));
+        LawCase lawCase = lawCaseRepository.save(new LawCase("LawCase1",new Date().getTime()));
         lawCase.setCaseInfo( new CaseInfo("objectiveDesc1","subjectiveDesc1"));
-        LawCase lawCaseResult = lawCaseRepository.findById(1L).get();
+        LawCase lawCaseResult = lawCaseRepository.findById(lawCase.getId()).get();
         Assertions.assertEquals("LawCase1", lawCaseResult.getLawCaseName());
         Assertions.assertEquals("objectiveDesc1", lawCaseResult.getCaseInfo().getObjectiveDesc());
         Assertions.assertEquals("subjectiveDesc1", lawCaseResult.getCaseInfo().getSubjectiveDesc());

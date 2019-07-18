@@ -28,7 +28,7 @@ public class JudgeTest {
 
     @Test
     public void should_return_judge_when_find_by_id() {
-        Long id =judgeRepository.saveAndFlush(new Judge("Judge1")).getId();
+        Long id =judgeRepository.save(new Judge("Judge1")).getId();
         Judge judge = judgeRepository.findById(id).get();
         Assertions.assertEquals("Judge1", judge.getName());
     }
